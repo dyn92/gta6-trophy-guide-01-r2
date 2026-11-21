@@ -3,23 +3,76 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GTA VI trophy checklist</title>
+<title>Leonida Platinum Atlas — GTA VI Trophy Guide &amp; Tracker</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>GTA VI trophy checklist</h1>
-  <p id="progress">0 of 55 earned</p>
-</header>
-<div class="controls">
-  <label>Grade <select id="grade"><option value="all">All</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select></label>
-  <button id="export" type="button">Export progress</button>
-  <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
+<div class="shell">
+  <aside class="rail">
+    <p class="brand">Leonida<br>Platinum Atlas</p>
+    <p class="tagline">An unofficial, offline field guide and tracker for the 55 Grand Theft Auto VI trophies on PlayStation 5.</p>
+    <div class="dial" aria-label="Overall progress">
+      <span id="dialCount">0 / 55</span>
+      <span id="dialPct">0%</span>
+    </div>
+    <div class="bar"><div id="barFill"></div></div>
+    <ul class="tierCounts" id="tierCounts"></ul>
+    <nav class="views" aria-label="Views">
+      <button type="button" data-view="atlas" class="viewBtn isOn">Atlas checklist</button>
+      <button type="button" data-view="roadmap" class="viewBtn">Platinum roadmap</button>
+      <button type="button" data-view="missables" class="viewBtn">Missables watch</button>
+    </nav>
+    <label class="switch">
+      <input type="checkbox" id="spoilerToggle">
+      <span>Spoiler shield — blur unearned story trophies</span>
+    </label>
+    <div class="ioRow">
+      <button type="button" id="exportBtn">Export progress</button>
+      <label class="importBtn">Import progress
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </label>
+      <button type="button" id="resetBtn">Reset</button>
+    </div>
+    <p class="fineprint">Progress lives only in this browser (localStorage). Trophy names, descriptions and grades follow the official list published by Exophase; progress targets follow PSNProfiles guide conventions. All guide text here is original to this atlas.</p>
+  </aside>
+
+  <main class="panel">
+    <section id="view-atlas">
+      <h1>The 55, one honest checklist</h1>
+      <div class="filters">
+        <input type="search" id="searchBox" placeholder="Search a trophy, a place, a person…" aria-label="Search trophies">
+        <select id="kindFilter" aria-label="Filter by kind"></select>
+        <select id="gradeFilter" aria-label="Filter by grade">
+          <option value="any">Any grade</option>
+          <option value="platinum">Platinum</option>
+          <option value="gold">Gold</option>
+          <option value="silver">Silver</option>
+          <option value="bronze">Bronze</option>
+        </select>
+        <select id="stateFilter" aria-label="Filter by state">
+          <option value="any">Earned or not</option>
+          <option value="done">Earned only</option>
+          <option value="todo">Still to earn</option>
+        </select>
+      </div>
+      <p id="showingLine" class="showing"></p>
+      <ol id="cardList" class="cards"></ol>
+      <p id="emptyLine" class="empty" hidden>No trophy matches that combination. Loosen a filter and the atlas opens back up.</p>
+    </section>
+
+    <section id="view-roadmap" hidden>
+      <h1>Six stages to platinum</h1>
+      <p class="lede">Built from the official trophy descriptions: story first, then strands, mastery, collecting, cash, and the long road to 100 percent. Stages unlock in the order most players will meet them; the atlas counts each stage from your checklist.</p>
+      <ol id="stageList" class="stages"></ol>
+    </section>
+
+    <section id="view-missables" hidden>
+      <h1>Missables watch</h1>
+      <p class="lede">These are the trophies this atlas flags as missable, judged from their official descriptions: one-off moments, fail-then-retry beats, and choices that cannot be un-made. The defence is boring and effective — keep rotating manual saves. Everything not listed here can be cleaned up in free roam.</p>
+      <ol id="missList" class="cards"></ol>
+    </section>
+  </main>
 </div>
-<table>
-  <thead><tr><th>Earned</th><th>Trophy</th><th>Grade</th><th>How to get it</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
-<script type="module" src="app.js"></script>
+<script type="module" src="atlas.js"></script>
 </body>
 </html>

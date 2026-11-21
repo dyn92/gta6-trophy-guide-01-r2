@@ -1,5 +1,1 @@
-[
-  { "file": "1-checklist.jpg", "path": "/", "viewport": { "width": 1280, "height": 800 } },
-  { "file": "2-silver.jpg", "path": "/", "grade": "silver", "viewport": { "width": 1280, "height": 800 } },
-  { "file": "3-bronze.jpg", "path": "/", "grade": "bronze", "scroll": 1400, "viewport": { "width": 1280, "height": 800 } }
-]
+[{"file":"01-atlas-checklist.jpg","path":"/","view":"atlas checklist with the first three trophies ticked and the progress dial at 3 of 55","viewport":{"height":800,"width":1280}},{"file":"02-platinum-roadmap.jpg","path":"/?view=roadmap","view":"platinum roadmap, six stages with per-stage progress bars","viewport":{"height":800,"width":1280}},{"file":"03-missables-watch.jpg","path":"/?view=missables","view":"missables watch, the seven flagged trophies with save-first warnings","viewport":{"height":800,"width":1280}},{"file":"04-spoiler-shield.jpg","path":"/?shield=1","view":"checklist with the spoiler shield on, unearned story trophy names and descriptions blurred","viewport":{"height":800,"width":1280}}]

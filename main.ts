@@ -1,36 +1,45 @@
-// A working gta6-trophy-guide-01 entry (Node 22, standard library only): the guide is this directory's app/ folder,
-// plain static files a browser opens at app/index.html (ES modules, CSS, no build step), offline: it loads nothing
-// over the network, and its trophy list and guides are app/data/trophies.json. The program hands it in: it copies app/
-// and screenshots/ from beside this file to /output and writes /output/dossier.json, the summary the judge reads (your
-// screenshots, the first load's files and bytes, and your source), with the vendored make.fun library. Leave
-// vendor/makefun-frontend.ts as it is: the scorer requires dossier.json to be byte for byte what its own copy writes.
+// Leonida Platinum Atlas — hand-in program for make.fun (gta6-trophy-guide-01).
 //
-// Only the plumbing, not a winner: a plain checklist of the 55 trophies with a one-line hint each. Write a real guide
-// for every trophy in your own words, a roadmap to the platinum, filters and a spoiler setting in app/, put 3 or 4 PNG
-// or JPEG screenshots of it in screenshots/ (the first by name is the cover; shots.json says which views this
-// starter's were taken of), and run it.
+// What this file does, in plain terms:
+//   1. It works out where it lives and where the output folder is
+//      (MAKEFUN_OUTPUT_DIR when set, otherwise /output).
+//   2. It copies the finished static site from app/ and the captures from
+//      screenshots/ into that output folder, untouched.
+//   3. It asks the vendored make.fun library to summarise the output folder
+//      into dossier.json, using the same caps the scorer applies, so the
+//      hand-in fails here first if it would fail there.
 //
-// Serve it locally with `node serve.ts`, then open http://localhost:8080.
-// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
-//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// The site itself needs no building: app/ is plain HTML, CSS and JavaScript
+// that a browser opens directly. Node 22 standard library only.
+// Run it locally with:  mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-frontend.ts';
 
-const here = fileURLToPath(new URL('.', import.meta.url));
-const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const repoRoot = dirname(fileURLToPath(import.meta.url));
+const target = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-mkdirSync(out, { recursive: true });
-cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
-mkdirSync(join(out, 'screenshots'), { recursive: true });
-if (existsSync(join(here, 'screenshots'))) cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
+mkdirSync(target, { recursive: true });
 
-// The scorer's own caps (reference/gate.json): only text_max_bytes shapes the bytes; the others refuse an entry the
-// scorer would refuse (more than 4 screenshots or one over 256 KiB; more than 993 files and directories in app/ or
-// 48 MiB of app files: app/ counts beside /output's own 1000-entry cap, its screenshots/ and dossier.json).
-writeFileSync(
-  join(out, 'dossier.json'),
-  buildDossier(out, { text_max_bytes: 163840, screenshots: { max: 4, max_bytes: 262144 }, app_max_files: 993, app_max_bytes: 50331648 }),
-);
+// The atlas pages and their data travel exactly as authored.
+cpSync(join(repoRoot, 'app'), join(target, 'app'), { recursive: true });
+
+// Captures are part of the hand-in; copy them when the folder is present.
+const shotsSource = join(repoRoot, 'screenshots');
+if (existsSync(shotsSource)) {
+  cpSync(shotsSource, join(target, 'screenshots'), { recursive: true });
+}
+
+// Caps mirror the scorer's gate: dossier text budget, at most four captures
+// of at most 256 KiB each, and the app-size limits.
+const dossierText = buildDossier(target, {
+  text_max_bytes: 163840,
+  screenshots: { max: 4, max_bytes: 262144 },
+  app_max_files: 993,
+  app_max_bytes: 50331648,
+});
+writeFileSync(join(target, 'dossier.json'), dossierText);
+
+console.log(`Leonida Platinum Atlas handed in to ${target} (dossier.json written).`);
